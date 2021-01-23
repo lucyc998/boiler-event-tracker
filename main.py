@@ -7,6 +7,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.textinput import TextInput
 from kivy.uix.widget import Widget
 import requests
+import plyer
 
 Builder.load_string("""
 <MenuScreen>:
