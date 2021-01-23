@@ -2,7 +2,7 @@ import kivy
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.label import Label
-from kivy_garden.mapview import MapView
+from kivy_garden.mapview import MapView, MapMarker
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.textinput import TextInput
 from kivy.uix.widget import Widget
@@ -23,10 +23,14 @@ Builder.load_string("""
 <MapScreen>:
     FloatLayout:
         MapView:
+            id: map_view
             lat: 40.423538
             lon: -86.9217
-            zoom: 15
+            zoom: 18
             on_touch_down: print("nice")
+            MapMarkerPopup:
+                lat: 40.423538
+                lon: -86.9217
         Button:
             text: 'Add an event'
             on_press: root.manager.current = 'event'
@@ -72,9 +76,12 @@ class MenuScreen(Screen):
 
 class MapScreen(Screen):
     def on_touch_down(self,touch):
-        super().on_touch_down(touch)
+        #super().on_touch_down(touch)
         print(touch)
-        print("hello")
+        print(type(touch.pos))
+        print(touch.pos[1])
+        print(self.ids.map_view.lon)
+        self.ids.map_view.add_marker(MapMarker(lon=self.ids.map_view.lon, lat=self.ids.map_view.lat, source='map_marker.png'))
 
 class EventScreen(Screen):
     pass
