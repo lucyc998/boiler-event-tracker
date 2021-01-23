@@ -5,6 +5,7 @@ from kivy.uix.label import Label
 from kivy_garden.mapview import MapView
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.textinput import TextInput
+from kivy.uix.widget import Widget
 
 Builder.load_string("""
 <MenuScreen>:
@@ -25,6 +26,7 @@ Builder.load_string("""
             lat: 40.423538
             lon: -86.9217
             zoom: 15
+            on_touch_down: print("nice")
         Button:
             text: 'Add an event'
             on_press: root.manager.current = 'event'
@@ -38,9 +40,30 @@ Builder.load_string("""
 
 <EventScreen>:
     GridLayout:
-        TextInput:
-            id: my_text
-            size_hint:(.3, .2)
+        cols:1
+        spacing:200
+        size: root.width-300, root.height-300
+        GridLayout:
+            spacing:20
+            
+            cols:2
+            Label:
+                text: "Event Name:"
+            TextInput:
+                id: name_box
+                multiline:False
+            Label:
+                text: "Description:"
+            TextInput:
+                id: descrip_box
+        GridLayout:
+            cols:2
+            Button:
+                text: "Add Event"
+                on_press: root.manager.current = 'map'
+            Button:
+                text: "Cancel"
+                on_press: root.manager.current = 'map'                
 """)
 
 # Declare screens
@@ -48,10 +71,19 @@ class MenuScreen(Screen):
     pass
 
 class MapScreen(Screen):
-    pass
+    def on_touch_down(self,touch):
+        super().on_touch_down(touch)
+        print(touch)
+        print("hello")
 
 class EventScreen(Screen):
     pass
+
+class Touch(Widget):
+    def on_touch_down(self,touch):
+        super().on_touch_down(touch)
+        print(touch)
+        print("hello")
 
 class MyApp(App):
     def build(self):
@@ -62,6 +94,8 @@ class MyApp(App):
         sm.add_widget(EventScreen(name='event'))
         
         return sm
+
+
 
 if __name__ == '__main__':
     MyApp().run()
