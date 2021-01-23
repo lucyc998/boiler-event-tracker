@@ -32,7 +32,7 @@ Builder.load_string("""
             pos: (17, 20)
         Button:
             text: 'Upload'
-            on_press: root.upload(42, 42, name_box, descrip_box, location_box)
+            on_press: root.upload(name_box, descrip_box, location_box)
             size_hint: (.43, .12)
             pos: (183, 20)
         TextInput
@@ -70,14 +70,15 @@ Builder.load_string("""
 class MapScreen(Screen):
     def on_touch_down(self, touch):
         super().on_touch_down(touch)
-        print(touch)
-        print("hello")
+        #print(touch)
+        #print("hello")
 
 
 class EventScreen(Screen):
-    def upload(self, lat, long, title, descrip, location):
+    def upload(self, title, descrip, location):
+        #get lat and long with jude code
         #do database things
-        print('Latitude = {0}, Longitude = {1}, Title = {2}, Description = {3}'.format(lat, long, title, descrip, location))
+        print('Title = {2}, Description = {3}'.format(title, descrip, location))
 
 
 
