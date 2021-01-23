@@ -6,6 +6,8 @@ from kivy_garden.mapview import MapView
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.textinput import TextInput
 from kivy.uix.widget import Widget
+from database import uploadToDB
+import geocoder
 
 Builder.load_string("""
 <MenuScreen>:
@@ -88,6 +90,8 @@ class MapScreen(Screen):
 class EventScreen(Screen):
     def upload(self, lat, long, title, descrip):
         #do database things
+        g = geocoder.ip('me')
+        uploadToDB(title.text, descrip.text, g.lat, g.lng)
         print('Latitude = {0}, Longitude = {1}, Title = {2}, Description = {3}'.format(lat, long, title, descrip))
 
 
