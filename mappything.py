@@ -6,21 +6,11 @@ from kivy_garden.mapview import MapView
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.textinput import TextInput
 from kivy.uix.widget import Widget
-from database import uploadToDB
-import geocoder
+from kivy.core.window import Window
+
+Window.size = (350, 625)
 
 Builder.load_string("""
-<MenuScreen>:
-    FloatLayout:
-        Button:
-            text: 'Goto map'
-            size_hint: (.3, .2)
-            on_press: root.manager.current = 'map'
-            pos: (75,200)
-        Button:
-            text: 'Quit'
-            size_hint: (.3, .2)
-            pos: (400, 200)
 <MapScreen>:
     FloatLayout:
         MapView:
@@ -29,56 +19,53 @@ Builder.load_string("""
             zoom: 15
             on_touch_down: print("nice")
         Button:
-            text: 'Add an event'
+            text: 'Add Event'
             on_press: root.manager.current = 'event'
-            size_hint: (.3, .2)
-            pos: (600, 100)
-        Button:
-            text: 'Back to menu'
-            on_press: root.manager.current = 'menu'
-            size_hint: (.3, .2)
-            pos: (600, 0)
+            size_hint: (.3, .12)
+            pos: (125, 20)
 <EventScreen>:
     FloatLayout:
         Button:
-            text: '←'
+            text: 'Back'
             on_press: root.manager.current = 'map'
-            size_hint: (.3, .2)
-            pos: (50, 0)
+            size_hint: (.43, .12)
+            pos: (17, 20)
         Button:
             text: 'Upload'
-            on_press: root.upload(42, 42, name_box, descrip_box)
-            size_hint: (.3, .2)
-            pos: (300, 0)
-    GridLayout:
-        cols:1
-        spacing:200
-        size: root.width-300, root.height-300
-        GridLayout:
-            cols: 2
-        GridLayout:
-            spacing:20
-
-            cols:2
-            Label:
-                text: "Event Name:"
-            TextInput:
-                id: name_box
-                multiline:False
-            Label:
-                text: "Description:"
-            TextInput:
-                id: descrip_box
-        GridLayout:
-            cols:2
-               
+            on_press: root.upload(42, 42, name_box, descrip_box, location_box)
+            size_hint: (.43, .12)
+            pos: (183, 20)
+        TextInput
+            text: 'Event Name: '
+            id: name_box
+            font_size: 25
+            size_hint: (.90, .24)
+            pos: (17, 455)
+            background_color: (255, 255, 255, 1)
+            color: (255, 255, 255, 1)
+            multiline: True 
+        TextInput
+            text: 'Location: '
+            id: location_box 
+            font_size: 25
+            size_hint: (.90, .24)
+            pos: (17, 285)
+            background_color: (255, 255, 255, 1)
+            color: (255, 255, 255, 1)
+            multiline: True 
+        TextInput
+            text: 'Description: '
+            id: descrip_box 
+            font_size: 25
+            size_hint: (.90, .24)
+            pos: (17, 115)
+            background_color: (255, 255, 255, 1)
+            color: (255, 255, 255, 1)
+            multiline: True 
 """)
 
 
 # Declare screens
-class MenuScreen(Screen):
-    pass
-
 
 class MapScreen(Screen):
     def on_touch_down(self, touch):
@@ -88,11 +75,9 @@ class MapScreen(Screen):
 
 
 class EventScreen(Screen):
-    def upload(self, lat, long, title, descrip):
+    def upload(self, lat, long, title, descrip, location):
         #do database things
-        g = geocoder.ip('me')
-        uploadToDB(title.text, descrip.text, g.lat, g.lng)
-        print('Latitude = {0}, Longitude = {1}, Title = {2}, Description = {3}'.format(lat, long, title, descrip))
+        print('Latitude = {0}, Longitude = {1}, Title = {2}, Description = {3}'.format(lat, long, title, descrip, location))
 
 
 
@@ -107,7 +92,6 @@ class MyApp(App):
     def build(self):
         # Create the screen manager
         sm = ScreenManager()
-        sm.add_widget(MenuScreen(name='menu'))
         sm.add_widget(MapScreen(name='map'))
         sm.add_widget(EventScreen(name='event'))
 
