@@ -9,7 +9,10 @@ from kivy.uix.widget import Widget
 from kivy.core.window import Window
 from kivy.uix.button import Button 
 from radarAPIcalls import getAddresses
+from kivy.uix.popup import Popup
+from kivy.uix.gridlayout import GridLayout 
 from database import uploadToDB
+from database import fetchFromDB
 
 Window.size = (350, 625)
 
@@ -26,6 +29,7 @@ Builder.load_string("""
             on_press: root.manager.current = 'event'
             size_hint: (.3, .12)
             pos: (125, 20)
+
 <EventScreen>:
     FloatLayout:
         Button:
@@ -71,12 +75,31 @@ Builder.load_string("""
 # Declare screens
 
 class MapScreen(Screen):
+
     def on_touch_down(self, touch):
         super().on_touch_down(touch)
-        m1 = MapMarkerPopup(lon=-86.9217, lat=40.423538, source="small_marker.png")
-        self.ids.map_view.add_marker(m1)
-        m1.add_widget(Button())
+        posts = fetchFromDB()
+        for event in posts:
+            print(event)
+            lat = event['lat']
+            lon = event['lon']
+            marker = MapMarkerPopup(lon=lon,lat=lat, source="small_marker.png")
+            self.ids.map_view.add_marker(marker)
+            self.ids.map_view.center_on(float(lat),float(lon))
+            btn = Button(
+                text=event['Description'], 
+                size_hint = (2, 2),
+                pos = (-10,100))
+            marker.add_widget(btn)
 
+        
+def callback(instance):
+    layout = GridLayout(cols=1, padding=10)
+    content = Button(text="Close")
+    popup= Popup(title='Event Info', content=content, size=(400,400))
+    content.bind(on_press=popup.dismiss)
+    popup.open()
+ 
 
 class EventScreen(Screen):
     def upload(self, title, descrip, location):
@@ -106,7 +129,21 @@ class MyApp(App):
 
         return sm
 
-
 if __name__ == '__main__':
     MyApp().run()
 # MyApp().run()
+
+''' m1 = MapMarkerPopup(lon=-86.9217, lat=40.423538, source="small_marker.png")
+        self.ids.map_view.add_marker(m1)
+        btn1 = Button(text="Get event info")
+        btn1.bind(on_press=callback)
+        m1.add_widget(btn1)'''
+       
+''' def add_markers():
+        posts = fetchFromDB()
+        for event in posts:
+            print(event)
+            lat = event['lat']
+            lon = event['lon']
+            marker = MapMarkerPopup(lon=lon,lat=lat, source="small_marker.png")
+            self.ids.map_view.add_marker(marker)  '''
