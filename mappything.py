@@ -85,20 +85,17 @@ class MapScreen(Screen):
             lon = event['lon']
             marker = MapMarkerPopup(lon=lon,lat=lat, source="small_marker.png")
             self.ids.map_view.add_marker(marker)
-            self.ids.map_view.center_on(float(lat),float(lon))
             btn = Button(
                 text=event['Description'], 
                 size_hint = (2, 2),
                 pos = (-10,100))
+            btn.bind(on_release= callback)
             marker.add_widget(btn)
 
         
 def callback(instance):
-    layout = GridLayout(cols=1, padding=10)
-    content = Button(text="Close")
-    popup= Popup(title='Event Info', content=content, size=(400,400))
-    content.bind(on_press=popup.dismiss)
-    popup.open()
+    instance.opacity=0
+    instance.disabled=True
  
 
 class EventScreen(Screen):
