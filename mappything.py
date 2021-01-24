@@ -2,11 +2,12 @@ import kivy
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.label import Label
-from kivy_garden.mapview import MapView
+from kivy_garden.mapview import MapView, MapMarkerPopup
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.textinput import TextInput
 from kivy.uix.widget import Widget
 from kivy.core.window import Window
+from kivy.uix.button import Button 
 
 Window.size = (350, 625)
 
@@ -14,10 +15,10 @@ Builder.load_string("""
 <MapScreen>:
     FloatLayout:
         MapView:
+            id: map_view
             lat: 40.423538
             lon: -86.9217
             zoom: 15
-            on_touch_down: print("nice")
         Button:
             text: 'Add Event'
             on_press: root.manager.current = 'event'
@@ -52,7 +53,7 @@ Builder.load_string("""
             pos: (17, 285)
             background_color: (255, 255, 255, 1)
             color: (255, 255, 255, 1)
-            multiline: True 
+            multiline: True
         TextInput
             text: 'Description: '
             id: descrip_box 
@@ -70,8 +71,9 @@ Builder.load_string("""
 class MapScreen(Screen):
     def on_touch_down(self, touch):
         super().on_touch_down(touch)
-        print(touch)
-        print("hello")
+        m1 = MapMarkerPopup(lon=-86.9217, lat=40.423538, source="small_marker.png")
+        self.ids.map_view.add_marker(m1)
+        m1.add_widget(Button())
 
 
 class EventScreen(Screen):
