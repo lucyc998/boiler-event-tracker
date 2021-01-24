@@ -86,9 +86,9 @@ class MapScreen(Screen):
             marker = MapMarkerPopup(lon=lon,lat=lat, source="small_marker.png")
             self.ids.map_view.add_marker(marker)
             btn = Button(
-                text=event['Description'], 
-                size_hint = (2, 2),
-                pos = (-10,100))
+                text ='Event: ' + event['Event'] + '\n\n\n' + 'Description:' + event['Description'],
+                size_hint = (3, 2),
+                font_size = 20)
             btn.bind(on_release= callback)
             marker.add_widget(btn)
 
@@ -105,7 +105,7 @@ class EventScreen(Screen):
         print(result)
         if result == 0:
             return 0
-        uploadToDB(title.replace("Event Name:", ""), result['placeLabel'], descrip.replace("Description", ""), result['latitude'], result['longitude'])
+        uploadToDB(title.replace("Event Name:", ""), result['placeLabel'], descrip.replace("Description:", ""), result['latitude'], result['longitude'])
         #print('Latitude = {0}, Longitude = {1}, Title = {2}, Description = {3}'.format(lat, long, title, descrip, location))
 
 
