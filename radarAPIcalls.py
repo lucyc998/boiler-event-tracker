@@ -10,6 +10,12 @@ def getNearestLocation(buildingName):
     radarResponse = requests.get('https://api.radar.io/v1/search/autocomplete', headers=authHeader, params=restParams)
     return radarResponse
 
+def getAddresses(buildingName):
+    response = getNearestLocation(buildingName)
+    if response.status_code == 200:
+        return response.json()['addresses']
+    return 0
+
 
 if __name__ == "__main__":
     userBuilding = input("Enter a building name: ")
@@ -18,6 +24,7 @@ if __name__ == "__main__":
         print("Error! Something went wrong!")
     else:
         locList = response.json()['addresses']
+        #print(json.dumps(response.json(), indent=4))
         for loc in locList:
             if 'placeLabel' in loc.keys():
                 print(f"The address for \"{userBuilding}\" is at {loc['formattedAddress']}, it is also known as: {loc['placeLabel']}.")
