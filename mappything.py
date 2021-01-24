@@ -29,6 +29,11 @@ Builder.load_string("""
             on_press: root.manager.current = 'event'
             size_hint: (.3, .12)
             pos: (125, 20)
+        Label:
+            text: 'Boiler Event Tracker'
+            pos: (0, 297)
+            font_size: 20
+            color: (0, 0, 0, 1)
 
 <EventScreen>:
     FloatLayout:
@@ -80,7 +85,6 @@ class MapScreen(Screen):
         super().on_touch_down(touch)
         posts = fetchFromDB()
         for event in posts:
-            print(event)
             lat = event['lat']
             lon = event['lon']
             marker = MapMarkerPopup(lon=lon,lat=lat, source="small_marker.png")
@@ -102,7 +106,6 @@ class EventScreen(Screen):
     def upload(self, title, descrip, location):
         #do database things
         result = getAddresses(location.replace('Location:', "").strip())[0]
-        print(result)
         if result == 0:
             return 0
         uploadToDB(title.replace("Event Name:", ""), result['placeLabel'], descrip.replace("Description:", ""), result['latitude'], result['longitude'])
@@ -113,8 +116,6 @@ class EventScreen(Screen):
 class Touch(Widget):
     def on_touch_down(self, touch):
         super().on_touch_down(touch)
-        print(touch)
-        print("hello")
 
 
 class MyApp(App):
