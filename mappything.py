@@ -7,6 +7,8 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.textinput import TextInput
 from kivy.uix.widget import Widget
 from kivy.core.window import Window
+from radarAPIcalls import getAddresses
+from database import uploadToDB
 
 Window.size = (350, 625)
 
@@ -17,7 +19,7 @@ Builder.load_string("""
             lat: 40.423538
             lon: -86.9217
             zoom: 15
-            on_touch_down: print("nice")
+            on_touch_down:
         Button:
             text: 'Add Event'
             on_press: root.manager.current = 'event'
@@ -32,7 +34,7 @@ Builder.load_string("""
             pos: (17, 20)
         Button:
             text: 'Upload'
-            on_press: root.upload(42, 42, name_box, descrip_box, location_box)
+            on_press: root.upload(name_box.text, descrip_box.text, location_box.text)
             size_hint: (.43, .12)
             pos: (183, 20)
         TextInput
@@ -70,14 +72,20 @@ Builder.load_string("""
 class MapScreen(Screen):
     def on_touch_down(self, touch):
         super().on_touch_down(touch)
-        print(touch)
-        print("hello")
+        
+        '''print(touch)
+        print("hello")'''
 
 
 class EventScreen(Screen):
-    def upload(self, lat, long, title, descrip, location):
+    def upload(self, title, descrip, location):
         #do database things
-        print('Latitude = {0}, Longitude = {1}, Title = {2}, Description = {3}'.format(lat, long, title, descrip, location))
+        result = getAddresses(location.replace('Location:', "").strip())[0]
+        print(result)
+        if result == 0:
+            return 0
+        uploadToDB(title.replace("Event Name:", ""), result['placeLabel'], descrip.replace("Description", ""), result['latitude'], result['longitude'])
+        #print('Latitude = {0}, Longitude = {1}, Title = {2}, Description = {3}'.format(lat, long, title, descrip, location))
 
 
 
