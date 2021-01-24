@@ -23,7 +23,7 @@ def fetchFromDB():
     posts = db.posts
     return posts.find()
 
-print(fetchFromDB()[0])
+
 
 #find_content = posts.find_one({'lat': '40'})
 #print(find_content)

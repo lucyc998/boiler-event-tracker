@@ -6,6 +6,7 @@ from kivy_garden.mapview import MapView, MapMarker
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.textinput import TextInput
 from kivy.uix.widget import Widget
+from database import fetchFromDB
 #from database import uploadToDB
 
 Builder.load_string("""
@@ -103,7 +104,7 @@ class MyApp(App):
         
         return sm
 
-
+print(fetchFromDB()[0])
 
 if __name__ == '__main__':
     MyApp().run()
